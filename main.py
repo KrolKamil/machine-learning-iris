@@ -59,9 +59,18 @@ class Iris:
 
         good = workbook.add_format({'bg_color': '#2be566'})
         bad = workbook.add_format({'bg_color': '#e52b2b'})
+        label = workbook.add_format({'bg_color': '#a3a7f7'})
 
-        row = 0
+        row = 1
         col = 0
+
+        worksheet.set_row(0, cell_format=label)
+        worksheet.write(0, 0, self.names[0])
+        worksheet.write(0, 1, self.names[1])
+        worksheet.write(0, 2, self.names[2])
+        worksheet.write(0, 3, self.names[3])
+        worksheet.write(0, 4, "exact")
+        worksheet.write(0, 5, "predicted")
 
         for sl, sw, pl, pw, exact, predicted in result_data:
             if (exact == predicted):
@@ -103,20 +112,27 @@ class Iris:
         fig.tight_layout()
         return ax
 
-    def dataPlot(self):
+    def sepalPlot(self):
         fig, ax = plt.subplots()
-        # scatter the sepal_length against the sepal_width
         ax.scatter(self.dataset['sepal-length'], self.dataset['sepal-width'])
-        # set a title and labels
-        ax.set_title('Iris Dataset')
-        ax.set_xlabel('sepal_length')
-        ax.set_ylabel('sepal_width')
         colors = {'Iris-setosa': 'r', 'Iris-versicolor': 'g', 'Iris-virginica': 'b'}
         for i in range(len(self.dataset['sepal-length'])):
             ax.scatter(self.dataset['sepal-length'][i], self.dataset['sepal-width'][i], color=colors[self.dataset['class'][i]])
-        ax.set_title('Iris Dataset')
+        ax.set_title('Iris-Sepal Dataset')
         ax.set_xlabel('sepal_length')
         ax.set_ylabel('sepal_width')
+        print(colors)
+
+    def petalPlot(self):
+        fig, ax = plt.subplots()
+        ax.scatter(self.dataset['petal-length'], self.dataset['petal-width'])
+        colors = {'Iris-setosa': 'r', 'Iris-versicolor': 'g', 'Iris-virginica': 'b'}
+        for i in range(len(self.dataset['petal-length'])):
+            ax.scatter(self.dataset['petal-length'][i], self.dataset['petal-width'][i], color=colors[self.dataset['class'][i]])
+        ax.set_title('Iris-Petal Dataset')
+        ax.set_xlabel('petal_length')
+        ax.set_ylabel('petal_width')
+
 
 myIris = Iris()
 
@@ -124,6 +140,7 @@ myIris.neuronNetwork()
 myIris.showScores()
 myIris.excelData()
 myIris.confusionMatrix()
-myIris.dataPlot()
+myIris.sepalPlot()
+myIris.petalPlot()
 
 plt.show()
