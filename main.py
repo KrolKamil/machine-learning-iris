@@ -32,7 +32,7 @@ class Iris:
         self.X_train, self.X_validation, self.Y_train, self.Y_validation = \
             model_selection.train_test_split(self.x, self.y, test_size=0.20, random_state=7)
 
-    def neuronNetwork(self):
+    def neuralNetwork(self):
         self.mlp = MLPClassifier(hidden_layer_sizes=(10, 10), activation='logistic', solver='adam', max_iter=1400,
                                  verbose=True, tol=1e-4, alpha=1e-06)
         self.mlp.fit(self.X_train, self.Y_train)
@@ -136,7 +136,7 @@ class Iris:
 
 myIris = Iris()
 
-myIris.neuronNetwork()
+myIris.neuralNetwork()
 myIris.showScores()
 myIris.excelData()
 myIris.confusionMatrix()
