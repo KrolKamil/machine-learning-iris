@@ -5,12 +5,12 @@ import matplotlib.pyplot as plt
 from sklearn import model_selection
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import confusion_matrix
-from sklearn import svm, datasets
-from sklearn.model_selection import train_test_split
-from sklearn.utils.multiclass import unique_labels
+
 
 class Iris:
     def __init__(self):
+        self.x = list()
+        self.y = list()
         self.class_names = ['Iris-virginica', 'Iris-versicolor', 'Iris-setosa']
         self.names = ['sepal-length', 'sepal-width', 'petal-length', 'petal-width', 'class']
         self.X_train = list()
@@ -19,17 +19,18 @@ class Iris:
         self.Y_validation = list()
         self.mlp = None
         self.predictions = None
+        self.dataset = list()
 
         self.__setUtUpData()
 
     def __setUtUpData(self):
-        dataset = pandas.read_csv('iris_data.csv', names=self.names)
-        array = dataset.values
-        x = array[:, 0:4]
-        y = array[:, 4]
+        self.dataset = pandas.read_csv('iris_data.csv', names=self.names)
+        array = self.dataset.values
+        self.x = array[:, 0:4]
+        self.y = array[:, 4]
 
         self.X_train, self.X_validation, self.Y_train, self.Y_validation = \
-            model_selection.train_test_split(x, y, test_size=0.20, random_state=7)
+            model_selection.train_test_split(self.x, self.y, test_size=0.20, random_state=7)
 
     def neuronNetwork(self):
         self.mlp = MLPClassifier(hidden_layer_sizes=(10, 10), activation='logistic', solver='adam', max_iter=1400,
@@ -39,8 +40,8 @@ class Iris:
         self.predictions = self.mlp.predict(self.X_validation)
 
     def showScores(self):
-        print(self.mlp.score(self.X_validation, self.Y_validation))
-        print(confusion_matrix(self.Y_validation, self.predictions))
+        score =self.mlp.score(self.X_validation, self.Y_validation)
+        print("Percentage accuracy: " + str(round(score * 100, 2)) + "%")
 
     def excelData(self):
         result_data = self.X_validation.tolist()
@@ -102,10 +103,27 @@ class Iris:
         fig.tight_layout()
         return ax
 
+    def dataPlot(self):
+        fig, ax = plt.subplots()
+        # scatter the sepal_length against the sepal_width
+        ax.scatter(self.dataset['sepal-length'], self.dataset['sepal-width'])
+        # set a title and labels
+        ax.set_title('Iris Dataset')
+        ax.set_xlabel('sepal_length')
+        ax.set_ylabel('sepal_width')
+        colors = {'Iris-setosa': 'r', 'Iris-versicolor': 'g', 'Iris-virginica': 'b'}
+        for i in range(len(self.dataset['sepal-length'])):
+            ax.scatter(self.dataset['sepal-length'][i], self.dataset['sepal-width'][i], color=colors[self.dataset['class'][i]])
+        ax.set_title('Iris Dataset')
+        ax.set_xlabel('sepal_length')
+        ax.set_ylabel('sepal_width')
+
 myIris = Iris()
 
 myIris.neuronNetwork()
 myIris.showScores()
 myIris.excelData()
 myIris.confusionMatrix()
+myIris.dataPlot()
+
 plt.show()
