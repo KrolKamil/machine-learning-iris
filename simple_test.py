@@ -34,8 +34,14 @@ for i in range(0, 30, 1):
     core_list[i].append(Y_validation[i])
     core_list[i].append(predicted[i])
 
-# with open('ssi_result.csv', mode='w') as data:
-#     data_writer = csv.writer(data)
-#     for predict in core_list:
-#         data_writer.writerow(predict)
+core_names = names
+core_names[4] = "exact"
+core_names.append("predicted")
+
+
+with open('ssi_result.csv', mode='w') as data:
+    data_writer = csv.writer(data)
+    data_writer.writerow(core_names)
+    for predict in core_list:
+        data_writer.writerow(predict)
 
