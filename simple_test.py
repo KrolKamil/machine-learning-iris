@@ -3,6 +3,7 @@ from sklearn import model_selection
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import confusion_matrix
 import csv
+import xlsxwriter
 
 
 url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv"
@@ -38,10 +39,35 @@ core_names = names
 core_names[4] = "exact"
 core_names.append("predicted")
 
+workbook = xlsxwriter.Workbook('final.xlsx')
+worksheet = workbook.add_worksheet("core sheet")
 
-with open('ssi_result.csv', mode='w') as data:
-    data_writer = csv.writer(data)
-    data_writer.writerow(core_names)
-    for predict in core_list:
-        data_writer.writerow(predict)
+good = workbook.add_format({'bg_color': '#2be566'})
+bad = workbook.add_format({'bg_color': '#e52b2b'})
+
+row = 0
+col = 0
+
+for sl, sw, pl, pw, exact, predicted in core_list:
+    if(exact == predicted):
+        worksheet.set_row(row, cell_format=good)
+    else:
+        worksheet.set_row(row, cell_format=bad)
+    worksheet.write(row, col, sl)
+    worksheet.write(row, col + 1, sw)
+    worksheet.write(row, col + 2, pl)
+    worksheet.write(row, col + 3, pw)
+    worksheet.write(row, col + 4, exact)
+    worksheet.write(row, col + 5, predicted)
+    row += 1
+
+workbook.close()
+
+
+
+# with open('ssi_result.csv', mode='w') as data:
+#     data_writer = csv.writer(data)
+#     data_writer.writerow(core_names)
+#     for predict in core_list:
+#         data_writer.writerow(predict)
 
